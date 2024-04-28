@@ -1,4 +1,39 @@
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const path = require('path');
+
+const cloudinary = require('./cloudinary');
+
+exports.upload = multer({
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, path.join(__dirname, '../../public/uploads'));
+        },
+        filename: function (req, file, cb) {
+            const ext = file.originalname.substring(
+                file.originalname.lastIndexOf('.'),
+            );
+            cb(null, file.fieldname + '-' + Date.now() + ext);
+        },
+    }),
+    fileFilter: function (req, file, cb) {
+        if (
+            file.mimetype == 'image/png' ||
+            file.mimetype == 'image/jpg' ||
+            file.mimetype == 'image/jpeg'
+        ) {
+            cb(null, true);
+        } else {
+            cb(null, false);
+            return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
+        }
+    },
+});
+
+exports.cloudUpload = async (file) => {
+    const result = await cloudinary.uploader.upload(file);
+    return result;
+};
 
 exports.generateToken = (user) => {
     const { id, username, email } = user;
