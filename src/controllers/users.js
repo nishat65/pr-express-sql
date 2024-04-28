@@ -39,7 +39,7 @@ exports.updateProfile = async (req, res, next) => {
         await user.save();
         const userJson = user.toJSON();
         delete userJson.password;
-        log.info('user is not found', userJson.username);
+        log.info('user exists: ', userJson.username);
         return res.status(200).json({
             status: 'success',
             data: {
@@ -69,7 +69,7 @@ exports.updatePassword = async (req, res, next) => {
         await user.save();
         const userJson = user.toJSON();
         delete userJson.password;
-        log.info('user is not found', userJson.username);
+        log.info('user exists: ', userJson.username);
         return res.status(200).json({
             status: 'success',
             data: {
