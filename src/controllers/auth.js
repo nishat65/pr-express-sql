@@ -3,7 +3,7 @@ const { Op } = require('sequelize');
 const User = require('@/models/users');
 const AppError = require('@/utils/error');
 const log = require('@/utils/logger');
-const { generateToken } = require('@/utils/utils');
+const { generateToken } = require('@/utils/helper');
 
 exports.register = async (req, res, next) => {
     try {
