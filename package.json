@@ -9,6 +9,9 @@
     "migrate:test": "NODE_ENV=test npx sequelize-cli db:migrate",
     "test": "jest --watchAll --verbose"
   },
+  "pre-commit": [
+    "format"
+  ],
   "author": "Nishat Roy",
   "license": "ISC",
   "description": "",
@@ -30,6 +33,7 @@
     "nodemon": "^3.1.0",
     "pg": "^8.11.5",
     "pg-hstore": "^2.3.4",
+    "pre-commit": "^1.2.2",
     "redis": "^4.6.13",
     "sequelize": "^6.37.3",
     "sqlite3": "^5.1.7",
