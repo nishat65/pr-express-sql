@@ -82,6 +82,9 @@ src/.env
 # Config file
 src/db/config/config.json
 
+#test database
+test/db/test.sqlite
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
