@@ -12,7 +12,7 @@ exports.register = async (req, res, next) => {
                 [Op.or]: [{ username }, { email }],
             },
         });
-        if (!user) {
+        if (user) {
             return next(new AppError(400, 'Username or email already exists'));
         }
 
