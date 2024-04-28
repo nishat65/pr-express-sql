@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const { Op } = require('sequelize');
 const User = require('@/models/users');
 const AppError = require('@/utils/error');
 const { generateToken } = require('@/utils/utils');
@@ -6,7 +7,16 @@ const { generateToken } = require('@/utils/utils');
 exports.register = async (req, res, next) => {
     try {
         const { username, password, email } = req.body;
-        const user = await User.create({
+        let user = await User.findOne({
+            where: {
+                [Op.or]: [{ username }, { email }],
+            },
+        });
+        if (!user) {
+            return next(new AppError(400, 'Username or email already exists'));
+        }
+
+        user = await User.create({
             username,
             password,
             email,
