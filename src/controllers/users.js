@@ -1,6 +1,7 @@
 const User = require('@/models/users');
 const AppError = require('@/utils/error');
 const log = require('@/utils/logger');
+const { cloudUpload } = require('@/utils/helper');
 
 exports.getProfile = async (req, res, next) => {
     try {
@@ -38,7 +39,7 @@ exports.updateProfile = async (req, res, next) => {
         await user.save();
         const userJson = user.toJSON();
         delete userJson.password;
-        log.info('user is not found', userJson.username);
+        log.info('user exists: ', userJson.username);
         return res.status(200).json({
             status: 'success',
             data: {
@@ -68,7 +69,37 @@ exports.updatePassword = async (req, res, next) => {
         await user.save();
         const userJson = user.toJSON();
         delete userJson.password;
-        log.info('user is not found', userJson.username);
+        log.info('user exists: ', userJson.username);
+        return res.status(200).json({
+            status: 'success',
+            data: {
+                user: userJson,
+            },
+        });
+    } catch (error) {
+        log.error('error while fetching user: ', error);
+        next(new AppError(500, error));
+    }
+};
+
+exports.uploadImage = async (req, res, next) => {
+    try {
+        const user = await User.findOne({ where: { id: req.user.id } });
+        if (!user) {
+            log.error('user is not found');
+            return next(new AppError(404, 'User not found'));
+        }
+        if (!req.file) {
+            log.error('image is not found');
+            return next(new AppError(404, 'Please upload an image'));
+        }
+
+        const result = await cloudUpload(req.file.path, 'profile');
+        user.image = result.url;
+        await user.save();
+        const userJson = user.toJSON();
+        delete userJson.password;
+        log.info('user exists', userJson.username);
         return res.status(200).json({
             status: 'success',
             data: {
@@ -85,7 +116,7 @@ exports.deleteProfile = async (req, res, next) => {
     try {
         const user = await User.update(
             {
-                isDeleted: false,
+                isDeleted: true,
             },
             { where: { id: req.user.id } },
         );

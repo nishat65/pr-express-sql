@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const AppError = require('@/utils/error');
 const log = require('@/utils/logger');
-exports.authMiddelware = (req, res, next) => {
+exports.authMiddleware = (req, res, next) => {
     if (!req.headers.authorization) {
         log.error('no authorization header is provided');
         return next(new AppError(401, 'Unauthorized to view this resource'));

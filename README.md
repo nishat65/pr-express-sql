@@ -41,6 +41,7 @@ This is a basic starter template for building a Node.js Express application with
 4. **Run migrations:**
 
     ```bash
+    npm run migrations --name <model_name>
     npm run migrate
     ```
 
