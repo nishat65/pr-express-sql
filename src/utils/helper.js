@@ -30,8 +30,20 @@ exports.upload = multer({
     },
 });
 
-exports.cloudUpload = async (file) => {
-    const result = await cloudinary.uploader.upload(file);
+exports.cloudUpload = async (file, folder) => {
+    const options = {
+        use_filename: true,
+        unique_filename: false,
+        overwrite: true,
+    };
+    const result = await cloudinary.uploader.upload(
+        file,
+        { folder, ...options },
+        function (error, result) {
+            if (error) return error;
+            return result;
+        },
+    );
     return result;
 };
 

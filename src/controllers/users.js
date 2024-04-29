@@ -1,7 +1,8 @@
+const file = require('fs/promises');
 const User = require('@/models/users');
 const AppError = require('@/utils/error');
 const log = require('@/utils/logger');
-const { cloudUpload } = require('../utils/helper');
+const { cloudUpload } = require('@/utils/helper');
 
 exports.getProfile = async (req, res, next) => {
     try {
@@ -94,11 +95,12 @@ exports.uploadImage = async (req, res, next) => {
             return next(new AppError(404, 'Please upload an image'));
         }
 
-        const result = await cloudUpload(req.file.path);
+        const result = await cloudUpload(req.file.path, 'profile');
         user.image = result.url;
         await user.save();
         const userJson = user.toJSON();
         delete userJson.password;
+        await file.unlink(req.file.path);
         log.info('user exists', userJson.username);
         return res.status(200).json({
             status: 'success',
