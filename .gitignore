@@ -82,6 +82,9 @@ src/.env
 # Config file
 src/db/config/config.json
 
+# Public assets folder
+public/assets/*
+
 #test database
 test/db/test.sqlite
 
