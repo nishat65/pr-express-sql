@@ -1,4 +1,3 @@
-const file = require('fs/promises');
 const User = require('@/models/users');
 const AppError = require('@/utils/error');
 const log = require('@/utils/logger');
@@ -100,7 +99,6 @@ exports.uploadImage = async (req, res, next) => {
         await user.save();
         const userJson = user.toJSON();
         delete userJson.password;
-        await file.unlink(req.file.path);
         log.info('user exists', userJson.username);
         return res.status(200).json({
             status: 'success',
@@ -118,7 +116,7 @@ exports.deleteProfile = async (req, res, next) => {
     try {
         const user = await User.update(
             {
-                isDeleted: false,
+                isDeleted: true,
             },
             { where: { id: req.user.id } },
         );

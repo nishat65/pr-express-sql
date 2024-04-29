@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs/promises');
 
 const cloudinary = require('./cloudinary');
 
@@ -44,6 +45,7 @@ exports.cloudUpload = async (file, folder) => {
             return result;
         },
     );
+    await fs.unlink(file);
     return result;
 };
 
